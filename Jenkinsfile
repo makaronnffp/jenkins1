@@ -1,26 +1,37 @@
 pipeline {
     agent any
 
+    environment {
+        NODE_VERSION = '22.x'
+    }
+
     stages {
         stage('Prepare') {
             steps {
                 script {
-                    def nodejs = tool name: 'Node22', type: 'jenkins.plugins.nodejs.tools.NodeJSInstallation'
-                    env.PATH = "${nodejs}/bin:${env.PATH}"
+                    echo 'Installing Node.js version 22...'
+                    sh 'curl -sL https://deb.nodesource.com/setup_22.x | sudo -E bash -'
+                    sh 'sudo apt install -y nodejs'
+                    sh 'node -v'  // Перевірка версії Node.js
                 }
-                sh 'node -v'
             }
         }
 
         stage('Build') {
             steps {
-                sh 'npm -v'
+                script {
+                    echo 'Building the application...'
+                    sh 'npm --version'  // Перевірка версії npm
+                }
             }
         }
 
         stage('Test') {
             steps {
-                sh 'echo "JENKINS_URL: $JENKINS_URL"'
+                script {
+                    echo 'Running tests...'
+                    echo "JENKINS_URL is: ${JENKINS_URL}"  // Показує змінну середовища JENKINS_URL
+                }
             }
         }
     }
