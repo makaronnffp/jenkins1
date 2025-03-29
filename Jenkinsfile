@@ -1,36 +1,28 @@
 pipeline {
     agent any
-
-    environment {
-        NODE_VERSION = '22.x'
-    }
-
+    
     stages {
-        stage('Prepare') {
+        stage('Підготувати') {
             steps {
                 script {
-                    echo 'Installing Node.js version 22...'
-                    sh 'curl -sL https://deb.nodesource.com/setup_22.x | sudo -E bash -'
-                    sh 'sudo apt install -y nodejs'
-                    sh 'node -v'  // Перевірка версії Node.js
+                    sh 'curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash -'
+                    sh 'sudo apt-get install -y nodejs'
                 }
             }
         }
-
-        stage('Build') {
+        
+        stage('Збірка') {
             steps {
                 script {
-                    echo 'Building the application...'
-                    sh 'npm --version'  // Перевірка версії npm
+                    sh 'npm -v'
                 }
             }
         }
-
-        stage('Test') {
+        
+        stage('Тест') {
             steps {
                 script {
-                    echo 'Running tests...'
-                    echo "JENKINS_URL is: ${JENKINS_URL}"  // Показує змінну середовища JENKINS_URL
+                    sh 'echo "JENKINS_URL: $JENKINS_URL"'
                 }
             }
         }
